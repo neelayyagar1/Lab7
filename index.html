@@ -85,6 +85,13 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
         // TODO
+        var linkLocation = document.getElementById("endpoint").value;
+        fetch(linkLocation).then(response =>
+          response.json()).then(function (data){
+            var outputLocation = document.getElementById("output");
+            outputLocation.innerHTML = JSON.stringify(data);
+          }).catch((err) => {
+              outputLocation.innerHTML = err.json()})
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -93,6 +100,20 @@
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
         // TODO
+        var getUserID = window.prompt("Enter response ID", "");
+        var linkLocation = document.getElementById("endpoint").value;
+        
+        fetch(linkLocation).then(response =>
+          response.json()).then(function (data){
+            var i;
+            for(i = 0; i < data.length; i++){
+              if(data[i].id == getUserID){
+                var outputLocation = document.getElementById("output");
+                outputLocation.innerHTML = JSON.stringify(data[i]);
+              }
+            }
+          }).catch((err) => {
+              outputLocation.innerHTML = err.json()})
       }
 
       // This function should use fetch to create one entry in the given endpoint.
@@ -101,6 +122,26 @@
       // the writeup to view the URL pattern for create and update
       function createRecord() {
         // TODO
+        var linkLocation = document.getElementById("endpoint").value;
+        document.getElementById("recordForm").style.display = "block";
+        var userTitle = document.getElementById("title").value;
+        var userAuthor = document.getElementById("author").value;
+        var outputLocation = document.getElementById("output");
+
+        if(userTitle != "" && userAuthor != ""){
+          fetch((linkLocation), {
+            method: "POST",
+            body: JSON.stringify({
+              "title": userTitle,
+              "author": userAuthor
+            }),
+            headers: {
+              "Content-Type": "application/json; charset=utf-8"
+            }
+          }).then(response => response.json()).then((json) => {
+            outputLocation.innerHTML = JSON.stringify(json)}).catch((err) => {
+              outputLocation.innerHTML = err.json()})
+        }
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
@@ -109,6 +150,30 @@
       // the writeup to view the URL pattern for create and update
       function updateRecord() {
         // TODO
+        document.getElementById("recordForm").style.display = "block";
+        document.getElementById("recordIDcontainer").style.display = "block";
+
+        var linkLocation = document.getElementById("endpoint").value;
+        var outputLocation = document.getElementById("output");
+        
+        var userTitle = document.getElementById("title").value;
+        var userAuthor = document.getElementById("author").value;
+        var userID = document.getElementById("recordID").value;
+
+        if(userTitle != "" && userAuthor != ""){
+          fetch((linkLocation + "/" + userID), {
+            method: "PUT",
+            body: JSON.stringify({
+              "title": userTitle,
+              "author": userAuthor
+            }),
+            headers: {
+              "Content-Type": "application/json; charset=utf-8"
+            }
+          }).then(response => response.json()).then((json) => {
+            outputLocation.innerHTML = JSON.stringify(json)}).catch((err) => {
+              outputLocation.innerHTML = err.json()})
+        }
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -118,6 +183,14 @@
       // delete all, only delete one.
       function deleteRecord() {
         // TODO
+        var getUserID = window.prompt("Enter response ID", "");
+        var linkLocation = document.getElementById("endpoint").value;
+        
+        fetch((linkLocation + "/" + getUserID), {
+            method: "DELETE"
+          }).then(response => response.json()).then((json) => {
+            outputLocation.innerHTML = JSON.stringify(json)}).catch((err) => {
+              outputLocation.innerHTML = err.json()})
       }
 
       window.addEventListener('DOMContentLoaded', () => {
